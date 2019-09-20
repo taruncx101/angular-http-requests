@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   onCreatePost(postData: Post) {
     // Send Http request
     this.http
-      .post(
+      .post<{ name: string }>(
         // 'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
         'https://ng-http-api.firebaseio.com//posts.json',
         postData
@@ -39,10 +39,10 @@ export class AppComponent implements OnInit {
 
   private fetchPosts() {
     // Send Http request
-    this.http.get(
+    this.http.get<{ [key: string]: Post }>(
       'https://ng-http-api.firebaseio.com//posts.json'
     )
-    .pipe(map((responseData: { [key: string]: Post }) => {
+    .pipe(map(responseData => {
       const postArray: Post[] = [];
       for (const key in responseData) {
         if (responseData.hasOwnProperty(key)) {
