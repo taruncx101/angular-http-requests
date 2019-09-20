@@ -1,3 +1,4 @@
+import { Post } from './post.model';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit {
     this.fetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post) {
     // Send Http request
     this.http
       .post(
@@ -41,8 +42,8 @@ export class AppComponent implements OnInit {
     this.http.get(
       'https://ng-http-api.firebaseio.com//posts.json'
     )
-    .pipe(map(responseData => {
-      const postArray = [];
+    .pipe(map((responseData: { [key: string]: Post }) => {
+      const postArray: Post[] = [];
       for (const key in responseData) {
         if (responseData.hasOwnProperty(key)) {
           postArray.push({...responseData[key], id: key});
