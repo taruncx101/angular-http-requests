@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -41,8 +41,17 @@ export class AppComponent implements OnInit {
     this.http.get(
       'https://ng-http-api.firebaseio.com//posts.json'
     )
-    .subscribe(responseData => {
-      console.log(responseData);
+    .pipe(map(responseData => {
+      const postArray = [];
+      for (const key in responseData) {
+        if (responseData.hasOwnProperty(key)) {
+          postArray.push({...responseData[key], id: key});
+        }
+      }
+      return postArray;
+    }))
+    .subscribe(posts => {
+      console.log(posts);
     });
   }
 }
