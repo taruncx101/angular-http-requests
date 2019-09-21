@@ -1,7 +1,8 @@
+import { PostService } from './posts.service';
 import { Post } from './post.model';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { TouchSequence } from 'selenium-webdriver';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,7 +12,7 @@ export class AppComponent implements OnInit {
   loadedPosts: Post[] = [];
   isFetching = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private postService: PostService) {}
 
   ngOnInit() {
     this.fetchPosts();
@@ -19,15 +20,7 @@ export class AppComponent implements OnInit {
 
   onCreatePost(postData: Post) {
     // Send Http request
-    this.http
-      .post<{ name: string }>(
-        // 'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
-        'https://ng-http-api.firebaseio.com//posts.json',
-        postData
-      )
-      .subscribe(responseData => {
-        console.log(responseData);
-      });
+    this.postService.createAndStorePost(postData);
   }
 
   onFetchPosts() {
@@ -37,26 +30,13 @@ export class AppComponent implements OnInit {
   onClearPosts() {
     // Send Http request
   }
-
   private fetchPosts() {
-    // Send Http request
     this.isFetching = true;
-    this.http.get<{ [key: string]: Post }>(
-      'https://ng-http-api.firebaseio.com//posts.json'
-    )
-    .pipe(map(responseData => {
-      const postArray: Post[] = [];
-      for (const key in responseData) {
-        if (responseData.hasOwnProperty(key)) {
-          postArray.push({...responseData[key], id: key});
-        }
-      }
-      return postArray;
-    }))
+    this.postService.fetctPosts()
     .subscribe(posts => {
+      console.log(posts);
       this.isFetching = false;
       this.loadedPosts = posts;
-      console.log(posts);
     });
   }
 }
