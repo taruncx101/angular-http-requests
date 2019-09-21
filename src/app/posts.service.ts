@@ -39,7 +39,8 @@ export class PostService {
           'custom-headers': 'hello',
         }),
         // params: new HttpParams().set('print', 'pretty'), // for one params
-        params: searchParams, // for multiple params
+        params: searchParams, // for multiple params,
+        responseType: 'json'
       }
     )
     .pipe(map(responseData => {
@@ -60,7 +61,8 @@ export class PostService {
   deletePosts() {
     return this.http.delete('https://ng-http-api.firebaseio.com//posts.json',
     {
-      observe: 'events'
+      observe: 'events',
+      responseType: 'text'
     })
     .pipe(
       tap(event => {
