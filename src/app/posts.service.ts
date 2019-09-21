@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { map, catchError } from 'rxjs/operators';
@@ -26,12 +26,17 @@ export class PostService {
     });
   }
   fetctPosts() {
+    let searchParams = new HttpParams();
+    searchParams = searchParams.append('print', 'pretty');
+    searchParams = searchParams.append('key', 'value');
     return this.http.get<{ [key: string]: Post }>(
       'https://ng-http-api.firebaseio.com//posts.json',
       {
         headers: new HttpHeaders({
-          'custom-headers': 'hello'
-        })
+          'custom-headers': 'hello',
+        }),
+        // params: new HttpParams().set('print', 'pretty'), // for one params
+        params: searchParams, // for multiple params
       }
     )
     .pipe(map(responseData => {
