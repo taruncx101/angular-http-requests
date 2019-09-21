@@ -17,7 +17,10 @@ export class PostService {
     .post<{ name: string }>(
       // 'https://ng-complete-guide-c56d3.firebaseio.com/posts.json',
       'https://ng-http-api.firebaseio.com//posts.json',
-      postData
+      postData,
+      {
+        observe: 'response'
+      }
     )
     .subscribe(responseData => {
       console.log(responseData);
@@ -55,6 +58,5 @@ export class PostService {
     }));
   }
   deletePosts() {
-    return this.http.delete('https://ng-http-api.firebaseio.com//posts.json');
-  }
+    return this.http.delete('https://ng-http-api.firebaseio.com//posts.json'}
 }
